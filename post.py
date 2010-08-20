@@ -29,7 +29,7 @@ def filial_info(html):
     >>>	html = f.read()
     >>> f.close()
     >>> filial_info(html)
-    (u'\u0412\u0456\u0434\u0434\u0456\u043b\u0435\u043d\u043d\u044f \u043f\u043e\u0448\u0442\u043e\u0432\u043e\u0433\u043e \u0437\u0432\\'\u044f\u0437\u043a\u0443 \u2116 69 \u043c. \u0414\u043d\u0456\u043f\u0440\u043e\u043f\u0435\u0442\u0440\u043e\u0432\u0441\u044c\u043a \u041f\u043e\u0448\u0442\u0430\u043c\u0442\u0443 - \u0426\u041f\u0417 \u2116 1 \u0414\u043d\u0456\u043f\u0440\u043e\u043f\u0435\u0442\u0440\u043e\u0432\u0441\u044c\u043a\u043e\u0457 \u0434\u0438\u0440\u0435\u043a\u0446\u0456\u0457 \u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u043e\u0433\u043e \u0434\u0435\u0440\u0436\u0430\u0432\u043d\u043e\u0433\u043e \u043f\u0456\u0434\u043f\u0440\u0438\u0454\u043c\u0441\u0442\u0432\u0430 \u043f\u043e\u0448\u0442\u043e\u0432\u043e\u0433\u043e \u0437\u0432\\'\u044f\u0437\u043a\u0443 "\u0423\u043a\u0440\u043f\u043e\u0448\u0442\u0430"', u'\u0432\u0443\u043b. \u0413. \u0421\u0442\u0430\u043b\u0456\u043d\u0433\u0440\u0430\u0434\u0430, 8', u'749-69-92')
+    [u'\u0412\u0456\u0434\u0434\u0456\u043b\u0435\u043d\u043d\u044f \u043f\u043e\u0448\u0442\u043e\u0432\u043e\u0433\u043e \u0437\u0432\\'\u044f\u0437\u043a\u0443 \u2116 69 \u043c. \u0414\u043d\u0456\u043f\u0440\u043e\u043f\u0435\u0442\u0440\u043e\u0432\u0441\u044c\u043a \u041f\u043e\u0448\u0442\u0430\u043c\u0442\u0443 - \u0426\u041f\u0417 \u2116 1 \u0414\u043d\u0456\u043f\u0440\u043e\u043f\u0435\u0442\u0440\u043e\u0432\u0441\u044c\u043a\u043e\u0457 \u0434\u0438\u0440\u0435\u043a\u0446\u0456\u0457 \u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u043e\u0433\u043e \u0434\u0435\u0440\u0436\u0430\u0432\u043d\u043e\u0433\u043e \u043f\u0456\u0434\u043f\u0440\u0438\u0454\u043c\u0441\u0442\u0432\u0430 \u043f\u043e\u0448\u0442\u043e\u0432\u043e\u0433\u043e \u0437\u0432\\'\u044f\u0437\u043a\u0443 "\u0423\u043a\u0440\u043f\u043e\u0448\u0442\u0430"', u'\u0432\u0443\u043b. \u0413. \u0421\u0442\u0430\u043b\u0456\u043d\u0433\u0440\u0430\u0434\u0430, 8', u'749-69-92']
     """
 
     fullname = address = phone = ""
@@ -47,15 +47,15 @@ def filial_info(html):
     phone = soup.find("table", 
         id='ctl00_ContentPlaceHolder1_dw').findAll('tr')[2].find('td').nextSibling.string
 
-    return (fullname, address, phone)
+    return [fullname, address, phone]
 
 def barcode_search_html(barcode):
     """Get html of barcode search page
 
     >>> delivery_info(barcode_search_html("RB193328726HK"))
-    (49069, '04.08.2010', 'The item number RB193328726HK was sent to the postal \
+    [49069, '04.08.2010', 'The item number RB193328726HK was sent to the postal \
 facility DNIPROPETROVSK 69, the postcode 49069, on 04.08.2010, but it has not \
-been handed over to the addressee.')
+been handed over to the addressee.']
     """
 
     search_barcode_url = 'http://80.91.187.254:8080/servlet/SMCSearch2?&lang=en&barcode=%s' % barcode
@@ -74,9 +74,9 @@ def delivery_info(html):
     >>>	html = f.read()
     >>> f.close()
     >>> delivery_info(html)
-    (49069, '04.08.2010', 'The item number RB193328726HK was sent to the postal \
+    [49069, '04.08.2010', 'The item number RB193328726HK was sent to the postal \
 facility DNIPROPETROVSK 69, the postcode 49069, on 04.08.2010, but it has not \
-been handed over to the addressee.')
+been handed over to the addressee.']
     """
 
     # strip excess whitespace and tags, also stupid windown newlines
@@ -94,7 +94,7 @@ been handed over to the addressee.')
     re_info = re.search('(The item .*\.)\s', html, re.S)
     info = re_info.group(1)
 
-    return (code, date, info)
+    return [code, date, info]
 
 def filial_search_html(index):
     """Get html with index search result

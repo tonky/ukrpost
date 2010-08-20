@@ -9,7 +9,7 @@ except ImportError:
 
 def ukrpost(environ, start_response):
     status = '200 OK' # HTTP Status
-    headers = [('Content-type', 'application/json')] # HTTP Headers
+    headers = [('Content-type', 'application/json'), ('charset','utf-8')] # HTTP Headers
     start_response(status, headers)
 
     path = environ['PATH_INFO']
@@ -33,8 +33,14 @@ def index(index):
     return [json.dumps(info)]
 
 def track(code):
-    info = delivery_info(barcode_search_html(code))
-    return [json.dumps(info)]
+    delivery= delivery_info(barcode_search_html(code))
+
+    code = filial_code(filial_search_html(delivery[0]))
+    filial = filial_info(filial_html(code))
+
+    delivery.extend(filial)
+
+    return [json.dumps(delivery)]
 
 def help():
     return "/index/49069 for post office info<br> \
