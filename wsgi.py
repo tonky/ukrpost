@@ -5,7 +5,7 @@ import re
 
 def ukrpost(environ, start_response):
     status = '200 OK' # HTTP Status
-    headers = [('Content-type', 'text/html')] # HTTP Headers
+    headers = [('Content-type', 'application/json')] # HTTP Headers
     start_response(status, headers)
 
     path = environ['PATH_INFO']
@@ -19,7 +19,7 @@ def ukrpost(environ, start_response):
         return index(urls[2])
 
     if urls[0] == "track":
-        return delivery(urls[2])
+        return track(urls[2])
 
     return help()
 
