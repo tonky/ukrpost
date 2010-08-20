@@ -1,7 +1,11 @@
 from wsgiref.simple_server import make_server
 from post import filial_search_html, filial_code, filial_info, filial_html, delivery_info, barcode_search_html
-import json
 import re
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 def ukrpost(environ, start_response):
     status = '200 OK' # HTTP Status
