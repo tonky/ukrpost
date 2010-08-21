@@ -1,5 +1,5 @@
-Parcel.Lookup = (function() {
-	this.find = function(parcelId, callback) {
+Parcel.Lookup = {
+	find: function(parcelId, callback) {
 		$.get("/track/" + parcelId, 
 			function(data) {
 				if (!data) {
@@ -10,7 +10,5 @@ Parcel.Lookup = (function() {
 				callback(data);
 			}
 		)
-	};
-	
-	return this;
-})();
+	}
+}

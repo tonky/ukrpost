@@ -11,6 +11,11 @@ body {
 	font-family: Helvetica, Arial, "sans-serif";
 	font-size: 12px;
 	color: white;
+	line-height: 18px;
+}
+
+a, a:active, a:visited {
+	color: white;
 }
 
 #map_canvas {
@@ -38,6 +43,10 @@ h1#title {
 	margin-left: 100px;
 }
 
+h1#title a {
+	text-decoration: none;
+}
+
 #welcome_overlay {
 	position: absolute;
 	z-index: 100;
@@ -50,6 +59,10 @@ h1#title {
 	padding: 12px 20px 12px 12px;
 }
 
+#welcome_overlay h2 {
+	margin: 0;
+}
+
 #welcome_overlay.waiting-for-input {
 	-webkit-transition-property: top, right, width, height;
 	-webkit-transition-duration: 0.3s;
@@ -59,7 +72,8 @@ h1#title {
 	right: 400px;
 	
 	width: 400px;
-	height: 250px;
+	padding-top: 1.5em;
+	padding-bottom: 2em;
 }
 
 #welcome_overlay.with-input {

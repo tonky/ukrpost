@@ -1,5 +1,5 @@
-Parcel.Map = (function() {
-	this.initialize = function() {
+Parcel.Map = {
+	initialize: function() {
 		var latlng = new google.maps.LatLng(48.821333, 31.26709);
 	  
 	  var options = {
@@ -12,39 +12,33 @@ Parcel.Map = (function() {
 	  };
 	
 	  this._map = new google.maps.Map(document.getElementById("map_canvas"), options);
-	};
+	},
 	
-	this.show = function(parcel) {
-		/*
-		var location = new google.maps.LatLng(parcel.lat, parcel.long) 
+	reset: function() {
+		if (this._marker) {
+			this._marker.setMap(null);
+		}
+		if (this._infoWindow) {
+			this._infoWindow.close();
+		}
+	},
+	
+	show: function(parcel) {
+		//var location = new google.maps.LatLng(parcel.lat, parcel.long) 
+		
+		var location = new google.maps.LatLng("48.482935", "35.976349");
 		
 		this._marker = new google.maps.Marker({
 		  position: location, 
-		  map: this._map, 
+		  map: this._map,
 		  title: parcel.name
 		});
 		
 		this._infoWindow = new google.maps.InfoWindow({
-		  content: parcel.status,
-		  maxWidth: 200
-		});
-		*/
-		
-		var location = new google.maps.LatLng("48.482935", "34.976349")
-	
-		this._marker = new google.maps.Marker({
-			position: location, 
-			map: this._map, 
-			title: "Название Отделения"
-		});
-
-		this._infoWindow = new google.maps.InfoWindow({
-		  content: "Посылка бла бла бла",
+		  content: parcel.status_full,
 		  maxWidth: 200
 		});
 	
 		this._infoWindow.open(this._map, this._marker);
 	}
-	
-	return this;
-}());
+};
