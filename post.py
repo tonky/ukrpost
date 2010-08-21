@@ -41,7 +41,7 @@ def filial_info(html):
     phone = soup.find("table", 
         id='ctl00_ContentPlaceHolder1_dw').findAll('tr')[2].find('td').nextSibling.string
 
-    return [fullname, address, phone]
+    return {'address_full': fullname, 'street': address, 'phone': phone}
 
 def barcode_search_html(barcode):
     """Get html of barcode search page
@@ -75,7 +75,7 @@ def delivery_info(html):
     re_info = re.search('(Відправлення .*\.)\s', html, re.S)
     info = re_info.group(1)
 
-    return [code, date, info]
+    return {'zipcode': code, 'updated': date, 'status_full': info}
 
 def filial_search_html(index):
     """Get html with index search result

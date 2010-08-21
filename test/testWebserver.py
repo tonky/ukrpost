@@ -33,17 +33,17 @@ class TestAsServer(unittest.TestCase):
 
         filial = json.loads(html)
 
-        self.assertEqual(filial[0], 49069)
-        self.assertEqual(filial[1], "04.08.2010")
-        self.assertEqual(filial[2], u"Відправлення за номером RB193328726HK \
+        self.assertEqual(filial['zipcode'], 49069)
+        self.assertEqual(filial['updated'], "04.08.2010")
+        self.assertEqual(filial['status_full'], u"Відправлення за номером RB193328726HK \
 передано 04.08.2010 в об'єкт поштового зв'язку ДНІПРОПЕТРОВСЬК 69 з \
 індексом 49069, на даний час не вручене.")
-        self.assertEqual(filial[3], u"Відділення поштового зв'язку № 69 м. \
+        self.assertEqual(filial['address_full'], u"Відділення поштового зв'язку № 69 м. \
 Дніпропетровськ Поштамту - ЦПЗ № 1 Дніпропетровської дирекції \
 Українського державного підприємства поштового зв'язку \
 \"Укрпошта\"")
-        self.assertEqual(filial[4], u"вул. Г. Сталінграда, 8")
-        self.assertEqual(filial[5], "749-69-92")
+        self.assertEqual(filial['street'], u"вул. Г. Сталінграда, 8")
+        self.assertEqual(filial['phone'], "749-69-92")
 
     def test_search_index(self):
         url = 'http://localhost:8000/index/49069'
@@ -56,12 +56,12 @@ class TestAsServer(unittest.TestCase):
 
         filial = json.loads(html)
 
-        self.assertEqual(filial[0], u"Відділення поштового зв'язку № 69 м. \
+        self.assertEqual(filial['address_full'], u"Відділення поштового зв'язку № 69 м. \
 Дніпропетровськ Поштамту - ЦПЗ № 1 Дніпропетровської дирекції \
 Українського державного підприємства поштового зв'язку \
 \"Укрпошта\"")
-        self.assertEqual(filial[1], u"вул. Г. Сталінграда, 8")
-        self.assertEqual(filial[2], "749-69-92")
+        self.assertEqual(filial['street'], u"вул. Г. Сталінграда, 8")
+        self.assertEqual(filial['phone'], "749-69-92")
 
     def test_help(self):
         url = 'http://localhost:8000/help.html'

@@ -14,9 +14,10 @@ class TestHtmlParsing(unittest.TestCase):
 
         info = delivery_info(html)
 
-        self.assertEqual([49069, '04.08.2010', "Відправлення за номером \
+        self.assertEqual({'zipcode': 49069, 'updated': '04.08.2010', 
+            'status_full': "Відправлення за номером \
 RB193328726HK передано 04.08.2010 в об'єкт поштового зв'язку \
-ДНІПРОПЕТРОВСЬК 69 з індексом 49069, на даний час не вручене."], info)
+ДНІПРОПЕТРОВСЬК 69 з індексом 49069, на даний час не вручене."}, info)
 
     def test_filial_info_parsing(self):
         f = open(os.path.join(os.getcwd(), 'test/details.html'), 'r')
@@ -25,12 +26,13 @@ RB193328726HK передано 04.08.2010 в об'єкт поштового зв
 
         parsed = filial_info(html)
 
-        self.assertEqual(u"вул. Г. Сталінграда, 8", parsed[1])
-        self.assertEqual("749-69-92", parsed[2])
+        self.assertEqual(u"вул. Г. Сталінграда, 8", parsed['street'])
+        self.assertEqual("749-69-92", parsed['phone'])
 
         self.assertEqual(u'Відділення поштового зв\'язку № 69 м. \
 Дніпропетровськ Поштамту - ЦПЗ № 1 Дніпропетровської дирекції \
-Українського державного підприємства поштового зв\'язку "Укрпошта"', parsed[0])
+Українського державного підприємства поштового зв\'язку "Укрпошта"',
+        parsed['address_full'])
 
 
     def test_unicode_comparison(self):
