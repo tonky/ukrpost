@@ -72,10 +72,10 @@ def index(index):
 def track(code):
     delivery= delivery_info(barcode_search_html(code))
 
-    code = filial_code(filial_search_html(delivery[0]))
+    code = filial_code(filial_search_html(delivery['zipcode']))
     filial = filial_info(filial_html(code))
 
-    delivery.extend(filial)
+    delivery.update(filial)
 
     return "application/json", json.dumps(delivery)
 
