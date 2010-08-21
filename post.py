@@ -24,12 +24,6 @@ def filial_html(code):
 def filial_info(html):
     """Parses html from UP filial details page and returns description, local 
     address and phone number
-
-    >>> f = open('/media/storage/projects/ukrpost/test/details.html', 'r')
-    >>>	html = f.read()
-    >>> f.close()
-    >>> filial_info(html)
-    [u'\u0412\u0456\u0434\u0434\u0456\u043b\u0435\u043d\u043d\u044f \u043f\u043e\u0448\u0442\u043e\u0432\u043e\u0433\u043e \u0437\u0432\\'\u044f\u0437\u043a\u0443 \u2116 69 \u043c. \u0414\u043d\u0456\u043f\u0440\u043e\u043f\u0435\u0442\u0440\u043e\u0432\u0441\u044c\u043a \u041f\u043e\u0448\u0442\u0430\u043c\u0442\u0443 - \u0426\u041f\u0417 \u2116 1 \u0414\u043d\u0456\u043f\u0440\u043e\u043f\u0435\u0442\u0440\u043e\u0432\u0441\u044c\u043a\u043e\u0457 \u0434\u0438\u0440\u0435\u043a\u0446\u0456\u0457 \u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u043e\u0433\u043e \u0434\u0435\u0440\u0436\u0430\u0432\u043d\u043e\u0433\u043e \u043f\u0456\u0434\u043f\u0440\u0438\u0454\u043c\u0441\u0442\u0432\u0430 \u043f\u043e\u0448\u0442\u043e\u0432\u043e\u0433\u043e \u0437\u0432\\'\u044f\u0437\u043a\u0443 "\u0423\u043a\u0440\u043f\u043e\u0448\u0442\u0430"', u'\u0432\u0443\u043b. \u0413. \u0421\u0442\u0430\u043b\u0456\u043d\u0433\u0440\u0430\u0434\u0430, 8', u'749-69-92']
     """
 
     fullname = address = phone = ""
@@ -37,7 +31,7 @@ def filial_info(html):
 
     html = re.sub('&quot;', '"', html)
 
-    soup = BeautifulSoup(html, fromEncoding="utf-8", smartQuotesTo=None)
+    soup = BeautifulSoup(html, fromEncoding="utf-8")
 
     fullname = soup.find("table", id='ctl00_ContentPlaceHolder1_dw').find('td').nextSibling.string
 
@@ -51,14 +45,9 @@ def filial_info(html):
 
 def barcode_search_html(barcode):
     """Get html of barcode search page
-
-    >>> delivery_info(barcode_search_html("RB193328726HK"))
-    [49069, '04.08.2010', 'The item number RB193328726HK was sent to the postal \
-facility DNIPROPETROVSK 69, the postcode 49069, on 04.08.2010, but it has not \
-been handed over to the addressee.']
     """
 
-    search_barcode_url = 'http://80.91.187.254:8080/servlet/SMCSearch2?&lang=en&barcode=%s' % barcode
+    search_barcode_url = 'http://80.91.187.254:8080/servlet/SMCSearch2?&lang=ua&barcode=%s' % barcode
 
     f = urllib.urlopen(search_barcode_url)
     html = f.read()
@@ -69,29 +58,21 @@ been handed over to the addressee.']
 def delivery_info(html):
     """Parse the html file returned by UP barcode search and get filial number
     where the package currently is
-
-    >>> f = open('/media/storage/projects/ukrpost/test/barcode.html', 'r')
-    >>>	html = f.read()
-    >>> f.close()
-    >>> delivery_info(html)
-    [49069, '04.08.2010', 'The item number RB193328726HK was sent to the postal \
-facility DNIPROPETROVSK 69, the postcode 49069, on 04.08.2010, but it has not \
-been handed over to the addressee.']
     """
 
-    # strip excess whitespace and tags, also stupid windown newlines
+    # strip excess whitespace and tags, also stupid windows newlines
     html = re.sub('\r', '', html)
     html = re.sub('\n', '', html)
     html = re.sub('<.*?>', '', html)
     html = re.sub('\s+', ' ', html)
 
-    re_code = re.search('the postcode (\d+)', html)
+    re_code = re.search('з індексом (\d+)', html)
     code = int(re_code.group(1))
 
-    re_date = re.search('on (\d\d\.\d\d\.\d{4})', html)
+    re_date = re.search('передано (\d\d\.\d\d\.\d{4})', html)
     date = re_date.group(1)
 
-    re_info = re.search('(The item .*\.)\s', html, re.S)
+    re_info = re.search('(Відправлення .*\.)\s', html, re.S)
     info = re_info.group(1)
 
     return [code, date, info]
