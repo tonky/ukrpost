@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-import sys
-sys.path.append("/media/storage/projects/ukrpost/") 
+import sys, os 
+sys.path.append(os.getcwd()) 
 from post import delivery_info, filial_info
 
-class TestUkrPost(unittest.TestCase):
+class TestHtmlParsing(unittest.TestCase):
     def test_delivery(self):
-        f = open('/media/storage/projects/ukrpost/test/barcode.html', 'r')
+        f = open(os.path.join(os.getcwd(), 'test/barcode.html'), 'r')
         html = f.read()
         f.close()
 
@@ -19,7 +19,7 @@ RB193328726HK передано 04.08.2010 в об'єкт поштового зв
 ДНІПРОПЕТРОВСЬК 69 з індексом 49069, на даний час не вручене."], info)
 
     def test_filial_info_parsing(self):
-        f = open('/media/storage/projects/ukrpost/test/details.html', 'r')
+        f = open(os.path.join(os.getcwd(), 'test/details.html'), 'r')
         html = f.read()
         f.close()
 
@@ -34,7 +34,7 @@ RB193328726HK передано 04.08.2010 в об'єкт поштового зв
 
 
     def test_unicode_comparison(self):
-        f = open('/media/storage/projects/ukrpost/test/unicode.txt', 'r')
+        f = open(os.path.join(os.getcwd(), 'test/unicode.txt'), 'r')
         u = f.read().strip()
         f.close()
         self.assertEqual("привет!", u)

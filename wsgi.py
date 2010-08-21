@@ -9,43 +9,65 @@ except ImportError:
     import simplejson as json
 
 def ukrpost(environ, start_response):
+    # dispatch request, distinguishing between static and dynamic
+    # make sure content-types are matching and charset is set
+    # return 404 on missing static, file with guessed contenttype otherwise
+    # known path
+
     path = environ['PATH_INFO']
 
+    # default content-type, status and response
+    ctype = 'text/plain'
+    status = '200 OK'
+    body = False
+    charset = 'utf-8'
+
+    if re.match("/index/(\d+)", path):
+        ctype, body = index(path[1:].partition("/")[2])
+
+    if re.match("/track/(\w+)", path):
+        ctype, body = track(path[1:].partition("/")[2])
+
     if path == "/":
-        return html(start_response)
+        path = "/index.html"
 
-    status = '200 OK'
-    headers = [('Content-type', 'application/json'), ('charset','utf-8')]
+    if not body:
+        ctype, body = static(path[1:])
+
+    if not body:
+        status = '404 Not found'
+        body = "Not found"
+
+    headers = [('Content-type', ctype), ('charset', charset)]
     start_response(status, headers)
 
-    if path == "/help":
-        return help()
+    return body
 
-    urls = path[1:].partition("/")
+def static(path):
+    ctype = 'text/plain'
 
-    if urls[0] == "index":
-        return index(urls[2])
+    if re.search("\.html", path):
+        ctype = 'text/html'
 
-    if urls[0] == "track":
-        return track(urls[2])
+    if re.search("\.css", path):
+        ctype = 'text/css'
 
-    return help()
+    if re.search("\.js", path):
+        ctype = 'application/javascript'
 
-def html(start_response):
-    status = '200 OK'
-    headers = [('Content-type', 'text/html'), ('charset','utf-8')]
-    start_response(status, headers)
+    try:
+        f = open(os.path.join(os.getcwd(), path), 'r')
+        body = f.read().strip()
+        f.close()
+    except:
+        body = False
 
-    f = open(os.path.join(os.getcwd(), 'index.html'), 'r')
-    html = f.read()
-    f.close()
-
-    return html
+    return ctype, body
 
 def index(index):
     code = filial_code(filial_search_html(int(index)))
     info = filial_info(filial_html(code))
-    return [json.dumps(info)]
+    return "application/json", json.dumps(info)
 
 def track(code):
     delivery= delivery_info(barcode_search_html(code))
@@ -55,14 +77,25 @@ def track(code):
 
     delivery.extend(filial)
 
-    return [json.dumps(delivery)]
+    return "application/json", json.dumps(delivery)
 
 def help():
     return "/index/49069 for post office info<br> \
 /track/xxxxxxxxxxxxxxxx for full tracking info"
 
-httpd = make_server('', 8000, ukrpost)
-print "Serving on port 8000..."
+def run():
+    httpd = make_server('', 8000, ukrpost)
+    print "Serving on port 8000..."
 
-# Serve until process is killed
-httpd.serve_forever()
+    # Serve until process is killed
+    httpd.serve_forever()
+
+def run_once():
+    httpd = make_server('', 8000, ukrpost)
+    print "Serving on port 8000..."
+
+    httpd.handle_request()
+
+
+if __name__ == '__main__':
+    run()
