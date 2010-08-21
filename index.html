@@ -1,3 +1,31 @@
+<!DOCTYPE html>
 <html>
-    OHAI
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>Где моя посылка?</title>
+		<link rel="stylesheet" href="/css/master.css" type="text/css" media="screen" title="master style" charset="utf-8">
+		<script type="text/javascript" src="/lib/jQuery.js"></script>
+		<script type="text/javascript" src="/lib/jquery.address.js"></script>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+		<script type="text/javascript" src="/js/parcel.js"></script>
+		<script type="text/javascript" src="/js/map.js"></script>
+		<script type="text/javascript" src="/js/lookup.js"></script>
+
+	<body id="home">
+		<div id="header">
+			<h1 id="title">Поиск Посылочек</h1>
+		</div>
+		<div class="waiting-for-input" id="welcome_overlay">
+			<h2>Давай номер:</h2>
+			<p>Пиши сюда 13-ти значный номер посылки, и ее никогда не украдут злодеи в пути. Например: <span class='sample'>RB193328726HK</span></p>
+			<input type="text" value="RB193328726HK" />
+			<button>Где моя посылка?</button>
+		</div>
+		<div id="main">
+			<div id="map_canvas">
+			</div>
+		</div>
+		<div id="footer">
+		</div>	
+	</body>
 </html>
