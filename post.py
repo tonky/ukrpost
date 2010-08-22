@@ -4,6 +4,7 @@
 import urllib
 import re
 from BeautifulSoup import BeautifulSoup
+from geocode import geocode
 
 filial_info_url = "http://services.ukrposhta.com/postindex_new/details.aspx?postfilial=%i"
 
@@ -21,12 +22,13 @@ def filial_html(code):
 
     return html
 
-def filial_info(html):
+def filial_info(html, place):
     """Parses html from UP filial details page and returns description, local 
     address and phone number
     """
 
     fullname = address = phone = ""
+    town = city = village = coords = ""
 
 
     html = re.sub('&quot;', '"', html)
@@ -34,6 +36,21 @@ def filial_info(html):
     soup = BeautifulSoup(html, fromEncoding="utf-8")
 
     fullname = soup.find("table", id='ctl00_ContentPlaceHolder1_dw').find('td').nextSibling.string
+    """
+    # extract city or town from fulltext index address
+    if re.match(u"(\w+)*\s*[в|В]ідділення поштового ", fullname, re.U):
+        town = re.search(u"язку (\w+)", fullname, re.U)
+        city = re.search(u"язку № \d+ м. (\w+)", fullname, re.U)
+    else:
+        village = re.match(u"(.*?) поштового", fullname, re.U)
+
+
+    if town: place = town.group(1)
+    if city: place = city.group(1)
+
+    if not place and village: 
+        place = village.group(1)
+"""
 
     address = soup.find("table", 
         id='ctl00_ContentPlaceHolder1_dw').findAll('tr')[1].find('td').nextSibling.string
@@ -41,7 +58,10 @@ def filial_info(html):
     phone = soup.find("table", 
         id='ctl00_ContentPlaceHolder1_dw').findAll('tr')[2].find('td').nextSibling.string
 
-    return {'address_full': fullname, 'street': address, 'phone': phone}
+    coords = geocode(place, address)
+
+    return {'address_full': fullname, 'street': address, 'phone': phone, 
+            'place': place, 'coordinates': coords}
 
 def barcode_search_html(barcode):
     """Get html of barcode search page
@@ -79,9 +99,6 @@ def delivery_info(html):
 
 def filial_search_html(index):
     """Get html with index search result
-
-    >>> filial_code(filial_search_html(49020))
-    33000000597035
     """
     
     search_post_url = 'http://services.ukrposhta.com/postindex_new/default_ul.aspx'
@@ -97,20 +114,10 @@ def filial_search_html(index):
 
 def filial_code(html):
     """Parse the html file returned by UP search API and get internal filial identifier
-
-    >>> f = open('/media/storage/projects/ukrpost/test/index_search.html', 'r')
-    >>>	html = f.read()
-    >>> f.close()
-    >>> filial_code(html)
-    32000100227819
     """
 
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, fromEncoding="utf-8")
     code = soup.find(attrs={'href' : re.compile("postfilial")})['href'].split('=')[1]
+    place = soup.find(id="ctl00_ContentPlaceHolder1_dgResult").find("tr").nextSibling.find("td").nextSibling.nextSibling.nextSibling.string
 
-    return int(code)
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+    return int(code), place

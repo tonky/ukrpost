@@ -65,15 +65,15 @@ def static(path):
     return ctype, body
 
 def index(index):
-    code = filial_code(filial_search_html(int(index)))
-    info = filial_info(filial_html(code))
+    code, place = filial_code(filial_search_html(int(index)))
+    info = filial_info(filial_html(code), place)
     return "application/json", json.dumps(info)
 
 def track(code):
     delivery= delivery_info(barcode_search_html(code))
 
-    code = filial_code(filial_search_html(delivery['zipcode']))
-    filial = filial_info(filial_html(code))
+    code, place = filial_code(filial_search_html(delivery['zipcode']))
+    filial = filial_info(filial_html(code), place)
 
     delivery.update(filial)
 

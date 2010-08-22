@@ -44,6 +44,8 @@ class TestAsServer(unittest.TestCase):
 \"Укрпошта\"")
         self.assertEqual(filial['street'], u"вул. Г. Сталінграда, 8")
         self.assertEqual(filial['phone'], "749-69-92")
+        self.assertEqual(filial['place'], u"Дніпропетровськ")
+        self.assertEqual(filial['coordinates'], {u"lat": 48.4451160, u"lng": 35.0259140})
 
     def test_search_index(self):
         url = 'http://localhost:8000/index/49069'
@@ -62,6 +64,42 @@ class TestAsServer(unittest.TestCase):
 \"Укрпошта\"")
         self.assertEqual(filial['street'], u"вул. Г. Сталінграда, 8")
         self.assertEqual(filial['phone'], "749-69-92")
+        self.assertEqual(filial['place'], u"Дніпропетровськ")
+
+    def test_search_bizzare(self):
+        url = 'http://localhost:8000/index/31000'
+        f = urllib.urlopen(url)
+        info = f.info()
+        html = f.read().strip()
+        f.close()
+
+        self.assertEqual("application/json", info.gettype())
+
+        filial = json.loads(html)
+
+        self.assertEqual(filial['address_full'], u"Красилівський вузол поштового \
+зв\"язку Хмельницької дирекції Українського державного підприємства \
+поштового зв\"язку \" Укрпошта \"")
+        self.assertEqual(filial['street'], u"пл. Незалежності 3")
+        self.assertEqual(filial['phone'], "4-44-36, 80674004685")
+        self.assertEqual(filial['place'], u"Слобідка Красилівська")
+        self.assertEqual(filial['coordinates'], {u"lat": 49.6197222, u"lng": 26.9802778})
+
+    def test_search_bizzare2(self):
+        url = 'http://localhost:8000/index/31100'
+        f = urllib.urlopen(url)
+        info = f.info()
+        html = f.read().strip()
+        f.close()
+
+        self.assertEqual("application/json", info.gettype())
+
+        filial = json.loads(html)
+
+        self.assertEqual(filial['street'], u"вул. Грушевського 14")
+        self.assertEqual(filial['phone'], "32128")
+        self.assertEqual(filial['place'], u"старокостянтинів-5")
+        self.assertEqual(filial['coordinates'], {u"lat": 49.7555556, u"lng": 27.2208333})
 
     def test_help(self):
         url = 'http://localhost:8000/help.html'
