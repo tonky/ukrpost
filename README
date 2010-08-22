@@ -6,8 +6,6 @@ API:
   /track/xxxxxxxxxxxxxxxx for full tracking info
 
 TODO:
-  - выдавать инфу по посылке на украинском
-  - геокодинг + отдача lat/long
   - перманентно кэшировать геокодинг и временно - результаты
 
 Spec:

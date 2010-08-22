@@ -112,6 +112,7 @@ class TestAsServer(unittest.TestCase):
 
         filial = json.loads(html)
 
+        self.assertEqual(filial['place'], u"Андронівка (Пеньки)")
         self.assertEqual(filial['coordinates'], {u"lat": 49.9397222, u"lng": 27.0905556})
 
     def test_help(self):
