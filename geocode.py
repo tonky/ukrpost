@@ -17,7 +17,9 @@ def geocode(place, address=False):
 
     # strip non-alphanumeric chars, replace spaces with "+", or geocoding
     # will fail for places like "старокостянтинів-5"
+    # parenthesized comments would fail as well
     place = re.sub('[0-9\-]', "", place)
+    place = re.sub('\(.+\)', "", place, re.U)
     place = place.replace(" ", "+")
 
     if address:
