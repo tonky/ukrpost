@@ -25,12 +25,10 @@ class TestCaching(unittest.TestCase):
         self.conn = sqlite3.connect(os.path.join(os.getcwd(), 'ukrpost.sqlite3'))
         self.cursor = self.conn.cursor()
 
-        self.cursor.execute('drop table if exists address')
-        self.cursor.execute('drop table if exists track')
+        self.cursor.execute('drop table if exists cache')
         self.conn.commit()
 
-        self.cursor.execute('create table address (postcode integer, address blob)')
-        self.cursor.execute('create table track (number integer, info blob, expires integer)')
+        self.cursor.execute('create table cache (key blob primary key, info blob, expires integer default 0)')
 
         self.conn.commit()
 
@@ -50,7 +48,7 @@ class TestCaching(unittest.TestCase):
         self.assertTrue((time.time() - start) > 0.4)
 
     def test_cached_expired_track(self):
-        self.cursor.execute("insert into track values (?, ?, ?)",
+        self.cursor.execute("insert into cache values (?, ?, ?)",
                 ('RB193328726HK', json.dumps(self.track), time.time() - 5))
 
         self.conn.commit()
@@ -88,7 +86,7 @@ class TestCaching(unittest.TestCase):
         self.assertTrue((time.time() - start) < 0.1)
 
     def test_cached_track(self):
-        self.cursor.execute("insert into track values (?, ?, ?)",
+        self.cursor.execute("insert into cache values (?, ?, ?)",
                 ('RB193328726HK', json.dumps(self.track), time.time() + 100))
 
         self.conn.commit()
@@ -117,8 +115,8 @@ class TestCaching(unittest.TestCase):
         self.assertTrue((time.time() - start) > 0.4)
 
     def test_cached_index(self):
-        self.cursor.execute("insert into address values (?, ?)",
-                (49069, json.dumps(self.post_49069)))
+        self.cursor.execute("insert into cache values (?, ?, ?)",
+                ("49069", json.dumps(self.post_49069), 0))
 
         self.conn.commit()
 
