@@ -10,11 +10,10 @@ information is returned as json, for frontend to display.
 """
 
 from BeautifulSoup import BeautifulSoup
-import os
 import re
-import sqlite3
 import urllib
 from geocode import geocode
+from cache import cache
 
 try:
     import json
@@ -22,44 +21,16 @@ except ImportError:
     import simplejson as json
 
 
-def get_cache(postcode):
-    conn = sqlite3.connect(os.path.join(os.getcwd(), 'ukrpost.sqlite3'))
-    c = conn.cursor()
-
-    # c.execute('create table if not exists address (postcode integer, address blob)')
-    # conn.commit()
-    c.execute('select postcode, address from address where postcode = ?', (postcode,))
-
-    row = c.fetchone()
-
-    if row:
-        return row[1].encode('utf-8')
-    
-    return False
-
-def add_cache(postcode, info):
-    conn = sqlite3.connect(os.path.join(os.getcwd(), 'ukrpost.sqlite3'))
-    c = conn.cursor()
-
-    c.execute('create table if not exists address (postcode integer, address text)')
-    c.execute('insert into address values (?, ?)', (postcode, info))
-    conn.commit()
-
+@cache()
 def index(zipcode):
     "Returns filial information in json by its zipcode"
-
-    info = get_cache(zipcode)
-
-    if info:
-        return info
 
     code, place = parse_filial_searchresult(filial_search_html(int(zipcode)))
     info = json.dumps(parse_filial_info(filial_info(code), place))
 
-    add_cache(zipcode, info)
-
     return info
 
+@cache(300)
 def track(number):
     "Returns tracking package location and current filial information"
 

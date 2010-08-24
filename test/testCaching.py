@@ -30,12 +30,82 @@ class TestCaching(unittest.TestCase):
         self.conn.commit()
 
         self.cursor.execute('create table address (postcode integer, address blob)')
-        self.cursor.execute('create table track (number integer, info blob)')
+        self.cursor.execute('create table track (number integer, info blob, expires integer)')
 
         self.conn.commit()
 
-        self.post_49069 = {"address_full": "", "phone": "12345", "street": "",
-                "place": "", "coordinates": ""}
+        self.post_49069 = {"address_full": "", "phone": "12345", "street":
+                u"Комсомолська", "place": "", "coordinates": ""}
+
+        self.track = {"address_full": "", "phone": "54321", "street":
+                u"Комсомолська", "place": "", "coordinates": "", "zipcode": 49000}
+
+    def test_noncached_track(self):
+        start = time.time()
+
+        f = urllib.urlopen('http://localhost:8000/track/RB193328726HK')
+        html = f.read().strip()
+        f.close()
+
+        self.assertTrue((time.time() - start) > 0.4)
+
+    def test_cached_expired_track(self):
+        self.cursor.execute("insert into track values (?, ?, ?)",
+                ('RB193328726HK', json.dumps(self.track), time.time() - 5))
+
+        self.conn.commit()
+
+        start = time.time()
+
+        f = urllib.urlopen('http://localhost:8000/track/RB193328726HK')
+        html = f.read().strip()
+        f.close()
+
+        self.assertTrue((time.time() - start) > 0.4)
+
+        track = json.loads(html)
+
+        self.assertEqual(track['street'], u"вул. Г. Сталінграда, 8")
+        self.assertEqual(track['phone'], "749-69-92")
+        self.assertEqual(track['place'], u"Дніпропетровськ")
+        self.assertEqual(track['coordinates'], {u"lat": 48.4451160, u"lng": 35.0259140})
+
+    def test_cache_track_on_reading(self):
+        f = urllib.urlopen('http://localhost:8000/track/RB193328726HK')
+        html = f.read().strip()
+        f.close()
+
+        self.p = Process(target=run_once)
+        self.p.start()
+        time.sleep(0.1)
+
+        start = time.time()
+
+        f = urllib.urlopen('http://localhost:8000/track/RB193328726HK')
+        html = f.read().strip()
+        f.close()
+
+        self.assertTrue((time.time() - start) < 0.1)
+
+    def test_cached_track(self):
+        self.cursor.execute("insert into track values (?, ?, ?)",
+                ('RB193328726HK', json.dumps(self.track), time.time() + 100))
+
+        self.conn.commit()
+
+        start = time.time()
+
+        f = urllib.urlopen('http://localhost:8000/track/RB193328726HK')
+        html = f.read().strip()
+        f.close()
+
+        self.assertTrue((time.time() - start) < 0.1)
+
+        track = json.loads(html)
+
+        self.assertEqual(track['phone'], "54321")
+        self.assertEqual(track['street'], u"Комсомолська")
+        self.assertEqual(track['zipcode'], 49000)
 
     def test_noncached_index(self):
         start = time.time()
@@ -63,6 +133,7 @@ class TestCaching(unittest.TestCase):
         filial = json.loads(html)
 
         self.assertEqual(filial['phone'], "12345")
+        self.assertEqual(filial['street'], u"Комсомолська")
 
     def tearDown(self):
         self.cursor.close()

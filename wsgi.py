@@ -44,7 +44,7 @@ def ukrpost(environ, start_response):
     headers = [('Content-type', ctype), ('charset', charset)]
     start_response(status, headers)
 
-    print "wsgi string: ", type(body), body
+    # print "wsgi string: ", type(body), body
 
     return body
 
