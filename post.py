@@ -9,9 +9,11 @@ are cached and address of filial with the package is geocoded, then all this
 information is returned as json, for frontend to display.
 """
 
-import urllib
-import re
 from BeautifulSoup import BeautifulSoup
+import os
+import re
+import sqlite3
+import urllib
 from geocode import geocode
 
 try:
@@ -20,17 +22,47 @@ except ImportError:
     import simplejson as json
 
 
-# #############################################################################
-# Here are public interface functions. 
+def get_cache(postcode):
+    conn = sqlite3.connect(os.path.join(os.getcwd(), 'ukrpost.sqlite3'))
+    c = conn.cursor()
 
-# returns filial information in json by its zipcode
+    # c.execute('create table if not exists address (postcode integer, address blob)')
+    # conn.commit()
+    c.execute('select postcode, address from address where postcode = ?', (postcode,))
+
+    row = c.fetchone()
+
+    if row:
+        return row[1].encode('utf-8')
+    
+    return False
+
+def add_cache(postcode, info):
+    conn = sqlite3.connect(os.path.join(os.getcwd(), 'ukrpost.sqlite3'))
+    c = conn.cursor()
+
+    c.execute('create table if not exists address (postcode integer, address text)')
+    c.execute('insert into address values (?, ?)', (postcode, info))
+    conn.commit()
+
 def index(zipcode):
-    code, place = parse_filial_searchresult(filial_search_html(int(zipcode)))
-    info = parse_filial_info(filial_info(code), place)
-    return json.dumps(info)
+    "Returns filial information in json by its zipcode"
 
-# returns tracking package location and current filial information
+    info = get_cache(zipcode)
+
+    if info:
+        return info
+
+    code, place = parse_filial_searchresult(filial_search_html(int(zipcode)))
+    info = json.dumps(parse_filial_info(filial_info(code), place))
+
+    add_cache(zipcode, info)
+
+    return info
+
 def track(number):
+    "Returns tracking package location and current filial information"
+
     delivery= parse_tracking_search(tracking_search(number))
 
     code, place = parse_filial_searchresult(filial_search_html(delivery['zipcode']))
@@ -39,6 +71,7 @@ def track(number):
     delivery.update(filial)
 
     return json.dumps(delivery)
+
 
 # #############################################################################
 # Helper API functions, should not be directly called by package users

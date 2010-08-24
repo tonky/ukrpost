@@ -3,6 +3,12 @@ from post import index, track
 import re
 import os
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+
 def ukrpost(environ, start_response):
     # dispatch request, distinguishing between static and dynamic
     # make sure content-types are matching and charset is set
@@ -37,6 +43,8 @@ def ukrpost(environ, start_response):
 
     headers = [('Content-type', ctype), ('charset', charset)]
     start_response(status, headers)
+
+    print "wsgi string: ", type(body), body
 
     return body
 
