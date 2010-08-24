@@ -7,23 +7,18 @@ Parcel.Main = {
 		});
 				
 		Parcel.Map.initialize();
+		Parcel.Main.list = new Parcel.List($("#my_parcels"));
 		
-		$.address.change(function(event) {
-			value = event.value;
-			
-			if (value == '/') {
-				Parcel.Main.reset();
-				return;
+		if (Parcel.Main.list.count() > 0) {
+			Parcel.Main.list.show();
+		}
+		else {
+			if (location.href.indexOf("#/find") < 0) {
+				$("#welcome_overlay").show();
 			}
-			
-			var parts = value.split("/");
-			if (parts.length < 3) return;
-			
-			if (parts[1] == 'find') {
-				Parcel.Main.findParcel(parts[2]);
-				return;
-			}
-		});
+		}
+		
+		$.address.change(Parcel.Main.onAddressChange);
 		
 		$("#welcome_overlay button").click(function() { 
 			var parcelId = $("#welcome_overlay input[type=text]").val();
@@ -35,20 +30,36 @@ Parcel.Main = {
 		Parcel.Lookup.find(parcelId, this.onFindSuccess);
 	},
 	
-	onFindSuccess: function(result) {
-		$("#welcome_overlay p").hide();
-		$("#welcome_overlay button").html("Проверить другую посылку");
-		$("#welcome_overlay").removeClass("waiting-for-input").addClass("with-input");
+	onAddressChange: function(event) {
+		value = event.value;
 		
-		Parcel.Map.show(result);
+		if (value == '/') {
+			Parcel.Main.reset();
+			return;
+		}
+		
+		var parts = value.split("/");
+		if (parts.length < 3) return;
+		
+		if (parts[1] == 'find') {
+			Parcel.Main.findParcel(parts[2]);
+			return;
+		}
+	},
+	
+	onFindSuccess: function(result) {
+		$("#welcome_overlay").hide();
+
+		Parcel.Map.showParcel(result);
+		Parcel.Main.list.showParcel(result);
 	},
 	
 	reset: function() {
-		$("#welcome_overlay p").show();
-		$("#welcome_overlay button").html("Проверить посылку");
-		$("#welcome_overlay").removeClass("with-input").addClass("waiting-for-input");
-		
+		if (this.list.count() == 0) {
+			$("#welcome_overlay").show();
+		}
 		Parcel.Map.reset();
+		this.list.reset();
 	}
 };
 

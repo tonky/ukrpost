@@ -10,15 +10,30 @@
 		<script type="text/javascript" src="/js/parcel.js"></script>
 		<script type="text/javascript" src="/js/map.js"></script>
 		<script type="text/javascript" src="/js/lookup.js"></script>
+		<script type="text/javascript" src="/js/list.js"></script>
 
 	<body id="home">
-		<div id="header">
-			<h1 id="title"><a href="/">Поиск Посылочек</a></h1>
+		<h1 id="title"><a href="/">Поиск Посылочек</a></h1>
+		
+		<div id="my_parcels" style="display:none">
+			<h2>Мои посылки:</h2>
+			<ul>
+				<!-->
+				<li><a class="current" href="#/find/RB193328726HK">RB193328726HK</a></li>
+				<li><a href="#/find/RB193328726HK">RB193328726HK</a></li>
+				<li><a href="#/find/RB193328726HK">RB193328726HK</a></li>
+				</!-->
+			</ul>
+			
+			<div class="input">
+				<input type="text" placeholder="Найти другую посылку"><button>Где она?</button>
+			</div>
 		</div>
-		<div class="waiting-for-input" id="welcome_overlay">
+		
+		<div class="waiting-for-input" style="display:none" id="welcome_overlay">
 			<h2>Товарищи!</h2>
 			<p>Если вписать сюда 13-ти значный номер посылки, то ее никогда не украдут злодеи в пути. Например: <a href='#/find/RB193328726HK' class='sample'>RB193328726HK</a>.</p>
-			<input type="text" value="" placeholder="Код посылки" />
+			<input type="text" placeholder="Код посылки" />
 			<button>Где моя посылка?</button>
 		</div>
 		<div id="main">
