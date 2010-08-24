@@ -25,6 +25,9 @@ def cache(timeout=False):
 
             if not info:
                 info = f(key)
+
+            # if request turned in nothing - do not cache it
+            if info:
                 _write(key, info, timeout)
 
             return info

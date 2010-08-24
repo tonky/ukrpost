@@ -6,9 +6,10 @@ API:
   /track/xxxxxxxxxxxxxxxx for full tracking info
 
 TODO:
-  - перманентно кэшировать геокодинг и временно - результаты
-  - refactor post api & simplify wsgi calls
-  - cleanup & comment code
+  - find webserver to host this
+  - purchase domain
+  - test with more keys
+  - deploy
 
 Ideas:
   - feedback form & server side api

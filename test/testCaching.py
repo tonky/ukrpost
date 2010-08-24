@@ -83,7 +83,7 @@ class TestCaching(unittest.TestCase):
         html = f.read().strip()
         f.close()
 
-        self.assertTrue((time.time() - start) < 0.1)
+        self.assertTrue((time.time() - start) < 0.2)
 
     def test_cached_track(self):
         self.cursor.execute("insert into cache values (?, ?, ?)",
@@ -97,7 +97,7 @@ class TestCaching(unittest.TestCase):
         html = f.read().strip()
         f.close()
 
-        self.assertTrue((time.time() - start) < 0.1)
+        self.assertTrue((time.time() - start) < 0.2)
 
         track = json.loads(html)
 

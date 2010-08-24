@@ -21,6 +21,24 @@ class TestAsServer(unittest.TestCase):
         self.p.start()
         time.sleep(0.1)
 
+    def test_search_missing_filial(self):
+        url = 'http://localhost:8000/index/4900'
+        f = urllib.urlopen(url)
+        info = f.info()
+        html = f.read().strip()
+        f.close()
+
+        self.assertEqual("Not found", html)
+
+    def test_search_missing_track(self):
+        url = 'http://localhost:8000/track/zomg'
+        f = urllib.urlopen(url)
+        info = f.info()
+        html = f.read().strip()
+        f.close()
+
+        self.assertEqual("Not found", html)
+
     def test_search_track(self):
         url = 'http://localhost:8000/track/RB193328726HK'
         f = urllib.urlopen(url)

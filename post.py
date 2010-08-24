@@ -26,6 +26,10 @@ def index(zipcode):
     "Returns filial information in json by its zipcode"
 
     code, place = parse_filial_searchresult(filial_search_html(int(zipcode)))
+
+    if not code:
+        return False
+
     info = json.dumps(parse_filial_info(filial_info(code), place))
 
     return info
@@ -34,7 +38,10 @@ def index(zipcode):
 def track(number):
     "Returns tracking package location and current filial information"
 
-    delivery= parse_tracking_search(tracking_search(number))
+    delivery = parse_tracking_search(tracking_search(number))
+
+    if not delivery:
+        return False
 
     code, place = parse_filial_searchresult(filial_search_html(delivery['zipcode']))
     filial = parse_filial_info(filial_info(code), place)
@@ -110,6 +117,10 @@ def parse_tracking_search(html):
     html = re.sub('\s+', ' ', html)
 
     re_code = re.search('з індексом (\d+)', html)
+
+    if not re_code:
+        return False
+
     code = int(re_code.group(1))
 
     re_date = re.search('передано (\d\d\.\d\d\.\d{4})', html)
@@ -139,8 +150,17 @@ def parse_filial_searchresult(html):
     """Parse the html file returned by UP search API and get internal filial identifier
     """
 
+    if not html:
+        return (False, False)
+
     soup = BeautifulSoup(html, fromEncoding="utf-8")
-    code = soup.find(attrs={'href' : re.compile("postfilial")})['href'].split('=')[1]
+    code = soup.find(attrs={'href' : re.compile("postfilial")})
+
+    if not code:
+        return (False, False)
+
+    code = code['href'].split('=')[1]
+
     place = soup.find(id="ctl00_ContentPlaceHolder1_dgResult").find("tr").nextSibling.find("td").nextSibling.nextSibling.nextSibling.string
 
     return int(code), place
