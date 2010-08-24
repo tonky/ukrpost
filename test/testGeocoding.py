@@ -4,8 +4,8 @@
 import unittest
 import sys, os
 sys.path.append(os.getcwd()) 
-from post import delivery_info, filial_info
 from geocode import geocode
+from post import parse_filial_info
 import urllib, urllib2
 import time
 
@@ -30,7 +30,7 @@ class TestGeocoding(unittest.TestCase):
         with open(os.path.join(os.getcwd(), 'test/html/49069.html'), 'r') as f:
             html = f.read()
 
-        parsed = filial_info(html, u"Дніпропетровськ")
+        parsed = parse_filial_info(html, u"Дніпропетровськ")
 
         self.assertEqual(geocode(parsed['place'], parsed['street']),
             {u'lat': 48.4451160, 
