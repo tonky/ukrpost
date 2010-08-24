@@ -1,18 +1,53 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+"""
+This is the API to get Ukrpost package tracking status, including address of the
+place package is currently in. I'm not aware of Ukrpost API for this, so all the
+information is aquired by parsing html from their respective webpages. Results
+are cached and address of filial with the package is geocoded, then all this
+information is returned as json, for frontend to display.
+"""
+
 import urllib
 import re
 from BeautifulSoup import BeautifulSoup
 from geocode import geocode
 
-filial_info_url = "http://services.ukrposhta.com/postindex_new/details.aspx?postfilial=%i"
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
+
+# #############################################################################
+# Here are public interface functions. 
+
+# returns filial information in json by its zipcode
+def index(zipcode):
+    code, place = parse_filial_searchresult(filial_search_html(int(zipcode)))
+    info = parse_filial_info(filial_info(code), place)
+    return json.dumps(info)
+
+# returns tracking package location and current filial information
+def track(number):
+    delivery= parse_tracking_search(tracking_search(number))
+
+    code, place = parse_filial_searchresult(filial_search_html(delivery['zipcode']))
+    filial = parse_filial_info(filial_info(code), place)
+
+    delivery.update(filial)
+
+    return json.dumps(delivery)
+
+# #############################################################################
+# Helper API functions, should not be directly called by package users
+
+# to get filial search data we have to submit this in POST
 viewstate = """/wEPDwUJNjEyMzA2MTk3D2QWAmYPZBYCAgMPZBYEAgEPDxYEHgtOYXZpZ2F0ZVVybAUMSGVscF91bC5hc3B4HgRUZXh0BQ7QlNC+0LLRltC00LrQsGRkAgUPZBYOAgMPZBYCZg9kFgICAQ8PFgIfAQUFNDkwNjlkZAIHD2QWAmYPZBYCAgEPEA8WAh4LXyFEYXRhQm91bmRnZBAVHB3QntCx0LXRgNGW0YLRjCDQvtCx0LvQsNGB0YLRjBLQktGW0L3QvdC40YbRjNC60LAS0JLQvtC70LjQvdGB0YzQutCwINCU0L3RltC/0YDQvtC/0LXRgtGA0L7QstGB0YzQutCwENCU0L7QvdC10YbRjNC60LAW0JbQuNGC0L7QvNC40YDRgdGM0LrQsBjQl9Cw0LrQsNGA0L/QsNGC0YHRjNC60LAU0JfQsNC/0L7RgNGW0LfRjNC60LAh0IbQstCw0L3Qvi3QpNGA0LDQvdC60ZbQstGB0YzQutCwCNCa0LjRl9CyENCa0LjRl9Cy0YHRjNC60LAc0JrRltGA0L7QstC+0LPRgNCw0LTRgdGM0LrQsBLQm9GD0LPQsNC90YHRjNC60LAS0JvRjNCy0ZbQstGB0YzQutCwGNCc0LjQutC+0LvQsNGX0LLRgdGM0LrQsA7QntC00LXRgdGM0LrQsBTQn9C+0LvRgtCw0LLRgdGM0LrQsB3QoNC10YHQv9GD0LHQu9GW0LrQsCDQmtGA0LjQvBTQoNGW0LLQvdC10L3RgdGM0LrQsBbQodC10LLQsNGB0YLQvtC/0L7Qu9GMDtCh0YPQvNGB0YzQutCwGtCi0LXRgNC90L7Qv9GW0LvRjNGB0YzQutCwFNCl0LDRgNC60ZbQstGB0YzQutCwFNCl0LXRgNGB0L7QvdGB0YzQutCwFtCl0LzQtdC70YzQvdC40YbRjNC60LAS0KfQtdGA0LrQsNGB0YzQutCwFtCn0LXRgNC90ZbQstC10YbRjNC60LAY0KfQtdGA0L3RltCz0ZbQstGB0YzQutCwFRwACTUwMDAwMDAwMAk1MDAwMDAwMDEJNTAwMDAwMDAzCTUwMDAwMDAwNAk1MDAwMDAwMDUJNTAwMDAwMDA2CTUwMDAwMDAwNwk1MDAwMDAwMDgJNTAwMDAwMDA5CTUwMDAwMDAxMAk1MDAwMDAwMTEJNTAwMDAw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"""
 
-def filial_html(code):
-    """Gets filial html by internal code
-    """
+def filial_info(code):
+    "Gets filial html by internal code"
 
     url = 'http://services.ukrposhta.com/postindex_new/details.aspx?postfilial=%s' % code
 
@@ -22,7 +57,7 @@ def filial_html(code):
 
     return html
 
-def filial_info(html, place):
+def parse_filial_info(html, place):
     """Parses html from UP filial details page and returns description, local 
     address and phone number
     """
@@ -36,21 +71,6 @@ def filial_info(html, place):
     soup = BeautifulSoup(html, fromEncoding="utf-8")
 
     fullname = soup.find("table", id='ctl00_ContentPlaceHolder1_dw').find('td').nextSibling.string
-    """
-    # extract city or town from fulltext index address
-    if re.match(u"(\w+)*\s*[в|В]ідділення поштового ", fullname, re.U):
-        town = re.search(u"язку (\w+)", fullname, re.U)
-        city = re.search(u"язку № \d+ м. (\w+)", fullname, re.U)
-    else:
-        village = re.match(u"(.*?) поштового", fullname, re.U)
-
-
-    if town: place = town.group(1)
-    if city: place = city.group(1)
-
-    if not place and village: 
-        place = village.group(1)
-"""
 
     address = soup.find("table", 
         id='ctl00_ContentPlaceHolder1_dw').findAll('tr')[1].find('td').nextSibling.string
@@ -63,9 +83,8 @@ def filial_info(html, place):
     return {'address_full': fullname, 'street': address, 'phone': phone, 
             'place': place, 'coordinates': coords}
 
-def barcode_search_html(barcode):
-    """Get html of barcode search page
-    """
+def tracking_search(barcode):
+    "Get html of barcode search page"
 
     search_barcode_url = 'http://80.91.187.254:8080/servlet/SMCSearch2?&lang=ua&barcode=%s' % barcode
 
@@ -75,7 +94,7 @@ def barcode_search_html(barcode):
 
     return html
 
-def delivery_info(html):
+def parse_tracking_search(html):
     """Parse the html file returned by UP barcode search and get filial number
     where the package currently is
     """
@@ -112,7 +131,7 @@ def filial_search_html(index):
 
     return html
 
-def filial_code(html):
+def parse_filial_searchresult(html):
     """Parse the html file returned by UP search API and get internal filial identifier
     """
 

@@ -4,7 +4,6 @@
 import unittest
 import sys, os
 sys.path.append(os.getcwd()) 
-from post import delivery_info, filial_info
 from wsgi import run_once, run
 from multiprocessing import Process
 import urllib, urllib2

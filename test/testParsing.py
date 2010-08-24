@@ -4,7 +4,7 @@
 import unittest
 import sys, os 
 sys.path.append(os.getcwd()) 
-from post import delivery_info, filial_info, filial_code
+from post import parse_tracking_search, parse_filial_info, parse_filial_searchresult
 
 class TestHtmlParsing(unittest.TestCase):
     def test_delivery(self):
@@ -12,7 +12,7 @@ class TestHtmlParsing(unittest.TestCase):
         html = f.read()
         f.close()
 
-        info = delivery_info(html)
+        info = parse_tracking_search(html)
 
         self.assertEqual({'zipcode': 49069, 'updated': '04.08.2010', 
             'status_full': "Відправлення за номером \
@@ -24,7 +24,7 @@ RB193328726HK передано 04.08.2010 в об'єкт поштового зв
         html = f.read()
         f.close()
 
-        parsed = filial_info(html, u"Дніпропетровськ")
+        parsed = parse_filial_info(html, u"Дніпропетровськ")
 
         self.assertEqual(u"Дніпропетровськ", parsed['place'])
         self.assertEqual(u"вул. Г. Сталінграда, 8", parsed['street'])
@@ -39,7 +39,7 @@ RB193328726HK передано 04.08.2010 в об'єкт поштового зв
         with open(os.path.join(os.getcwd(), 'test/html/index_search.html'), 'r') as f:
             html = f.read()
 
-        code, place = filial_code(html)
+        code, place = parse_filial_searchresult(html)
         self.assertEqual(u"Дніпропетровськ", place)
         self.assertEqual(32000100227819, code)
 
@@ -47,7 +47,7 @@ RB193328726HK передано 04.08.2010 в об'єкт поштового зв
         with open(os.path.join(os.getcwd(), 'test/html/index_search_31000.html'), 'r') as f:
             html = f.read()
 
-        code, place = filial_code(html)
+        code, place = parse_filial_searchresult(html)
         self.assertEqual(32000100524043, code)
         self.assertEqual(u"Слобідка Красилівська", place)
 

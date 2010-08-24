@@ -1,12 +1,7 @@
 from wsgiref.simple_server import make_server
-from post import filial_search_html, filial_code, filial_info, filial_html, delivery_info, barcode_search_html
+from post import index, track
 import re
 import os
-
-try:
-    import json
-except ImportError:
-    import simplejson as json
 
 def ukrpost(environ, start_response):
     # dispatch request, distinguishing between static and dynamic
@@ -23,10 +18,12 @@ def ukrpost(environ, start_response):
     charset = 'utf-8'
 
     if re.match("/index/(\d+)", path):
-        ctype, body = index(path[1:].partition("/")[2])
+        body = index(path[1:].partition("/")[2])
+        ctype = "application/json"
 
     if re.match("/track/(\w+)", path):
-        ctype, body = track(path[1:].partition("/")[2])
+        body = track(path[1:].partition("/")[2])
+        ctype = "application/json"
 
     if path == "/":
         path = "/index.html"
@@ -64,25 +61,6 @@ def static(path):
 
     return ctype, body
 
-def index(index):
-    code, place = filial_code(filial_search_html(int(index)))
-    info = filial_info(filial_html(code), place)
-    return "application/json", json.dumps(info)
-
-def track(code):
-    delivery= delivery_info(barcode_search_html(code))
-
-    code, place = filial_code(filial_search_html(delivery['zipcode']))
-    filial = filial_info(filial_html(code), place)
-
-    delivery.update(filial)
-
-    return "application/json", json.dumps(delivery)
-
-def help():
-    return "/index/49069 for post office info<br> \
-/track/xxxxxxxxxxxxxxxx for full tracking info"
-
 def run():
     httpd = make_server('', 8000, ukrpost)
     print "Serving on port 8000..."
@@ -90,6 +68,7 @@ def run():
     # Serve until process is killed
     httpd.serve_forever()
 
+# used in tests, handily kills itself after serving a single request
 def run_once():
     httpd = make_server('', 8000, ukrpost)
     print "Serving on port 8000..."
