@@ -59,6 +59,7 @@ Parcel.Main = {
 			$("#welcome_overlay").show();
 		}
 		Parcel.Map.reset();
+		this.list.reset();
 	}
 };
 

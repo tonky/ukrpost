@@ -28,6 +28,10 @@ Parcel.List.prototype = {
 		return this;
 	},
 	
+	reset: function() {
+		this._root.find("li a").removeClass("current");
+	},
+	
 	show: function() {
 		this._root.show();
 		return this;
