@@ -12,12 +12,6 @@ import sqlite3
 import time
 import math
 
-conn = sqlite3.connect(os.path.join(os.getcwd(), 'ukrpost.sqlite3'))
-c = conn.cursor()
-
-c.execute('create table if not exists cache (key blob primary key, info blob, expires integer default 0)')
-conn.commit()
-
 def cache(timeout=False):
     def check_cache(f):
         def new_f(key):
@@ -37,10 +31,23 @@ def cache(timeout=False):
 
 # internal functions
 
+def _sql3():
+    conn = sqlite3.connect(os.path.join(os.getcwd(), 'ukrpost.sqlite3'), 10)
+    c = conn.cursor()
+
+    c.execute('create table if not exists cache (key blob primary key, info blob, expires integer default 0)')
+    conn.commit()
+
+    return conn, c
+
 def _read(key):
+    conn, c = _sql3()
+
     c.execute('select key, info from cache where key = ? and (expires IS 0 or expires > ?)', (key, time.time()))
 
     row = c.fetchone()
+
+    conn.close()
 
     if row:
         # looks like data is read from sqlite as unicode, so i have to encode
@@ -55,5 +62,8 @@ def _write(key, info, timeout):
     if timeout:
         expires = int(time.time()) + timeout*60
 
+    conn, c = _sql3()
     c.execute('replace into cache values (?, ?, ?)', (key, info, expires))
     conn.commit()
+
+    conn.close()

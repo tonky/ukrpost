@@ -126,7 +126,7 @@ class TestCaching(unittest.TestCase):
         html = f.read().strip()
         f.close()
 
-        self.assertTrue((time.time() - start) < 0.1)
+        self.assertTrue((time.time() - start) < 0.2)
 
         filial = json.loads(html)
 
