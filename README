@@ -5,6 +5,15 @@ API:
   /index/49069 for post office info
   /track/xxxxxxxxxxxxxxxx for full tracking info
 
+Real tracking numbers:
+  - CJ203841359US
+  - RB193328726HK
+
+Dummy data:
+  - AA111111111BB
+  - AA222222222BB
+  - AA333333333BB
+
 TODO:
   - find webserver to host this
   - purchase domain

@@ -40,6 +40,25 @@ def track(number):
 
     delivery = parse_tracking_search(tracking_search(number))
 
+    # dummy data
+    if number == 'AA111111111BB':
+        delivery = {'zipcode': 34020, 'updated': '23.09.2010', 
+            'status_full': "Відправлення за номером \
+AA111111111BB передано 20.09.2010 в об'єкт поштового зв'язку \
+Неньковичи з індексом 34020, на даний час не вручене."}
+
+    if number == 'AA222222222BB':
+        delivery = {'zipcode': 27240, 'updated': '23.09.2010', 
+            'status_full': "Відправлення за номером \
+AA222222222BB передано 20.09.2010 в об'єкт поштового зв'язку \
+Тарасівка з індексом 27240, на даний час не вручене."}
+
+    if number == 'AA333333333BB':
+        delivery = {'zipcode': 19120, 'updated': '23.09.2010', 
+            'status_full': "Відправлення за номером \
+AA333333333BB передано 20.09.2010 в об'єкт поштового зв'язку \
+Шарнопіль з індексом 19120, на даний час не вручене."}
+
     if not delivery:
         return False
 
