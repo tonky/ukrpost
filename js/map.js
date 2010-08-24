@@ -1,6 +1,6 @@
 Parcel.Map = {
 	initialize: function() {
-		var latlng = new google.maps.LatLng(48.821333, 31.26709);
+		var latlng = new google.maps.LatLng(48.821333, 29.26709);
 	  
 	  var options = {
 	  	zoom: 6,
@@ -23,10 +23,8 @@ Parcel.Map = {
 		}
 	},
 	
-	show: function(parcel) {
-		//var location = new google.maps.LatLng(parcel.lat, parcel.long) 
-		
-		var location = new google.maps.LatLng("48.482935", "35.976349");
+	showParcel: function(parcel) {
+		var location = new google.maps.LatLng(parcel.coordinates.lat, parcel.coordinates.lng);
 		
 		this._marker = new google.maps.Marker({
 		  position: location, 

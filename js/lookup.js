@@ -6,7 +6,7 @@ Parcel.Lookup = {
 					return;
 				}
 				
-				var result = eval(data);
+				data.parcelId = parcelId;
 				callback(data);
 			}
 		)
