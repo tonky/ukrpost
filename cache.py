@@ -15,10 +15,7 @@ import math
 def cache(timeout=False):
     def check_cache(f):
         def new_f(key):
-            info = _read(key)
-
-            if not info:
-                info = f(key)
+            info = _read(key) or f(key)
 
             # if request turned in nothing - do not cache it
             if info:
