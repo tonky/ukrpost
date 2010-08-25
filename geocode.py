@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+""" Geocode postal address location, provided geografic place name and street
+address. Try to get precise street/house coordinates, but make sure that at
+least town location is geocoded.
+"""
+
 import urllib
 import re
 
@@ -23,12 +28,14 @@ def geocode(place, address=False):
     place = place.replace(" ", "+")
 
     if address:
-    # add street address, striping commas and replacing whitespace with "+", 
-    # if it is present. append to city name when done
+        # add street address, striping commas and replacing whitespace with "+", 
+        # if it is present. append to city name when done
         address = re.sub(",", "", address).replace(" ", "+")
 
         full_address = "%s,%s" % (address, place)
 
+    # try to get precise location, down to street name. fallback to town
+    # geocoding if it fails
     return _get_latlng(full_address) or _get_latlng(place)
 
 def _get_latlng(location):
