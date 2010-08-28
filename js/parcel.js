@@ -30,6 +30,12 @@ Parcel.Main = {
 		
 		var validator = new Parcel.CodeInputValidator(input, button);
 		validator.activate();
+		
+		$("#welcome_overlay a.sample").click(function(e) {
+			e.preventDefault();
+			input.val($(this).html());
+			validator.validate();
+		});
 	},
 	
 	findParcel: function(parcelId) {
