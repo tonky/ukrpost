@@ -67,6 +67,21 @@ h1#title {
 	padding: 1em 1.5em 1em 72px;
 }
 
+#error {
+	position: absolute;
+	z-index: 2;
+	
+	width: 360px;
+	right: 50%;
+	margin-right: -220px;
+	top: 25%;
+	
+	background: #6E0C18;
+	opacity: 0.9;
+	border-radius: 4px;
+	padding: 0 2em 1em 1em;
+}
+
 #my_parcels {
 	position: absolute;
 	z-index: 2;

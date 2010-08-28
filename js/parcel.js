@@ -2,8 +2,17 @@ if (typeof(Parcel) == "undefined") Parcel = {};
 
 Parcel.Main = {
 	onReady: function() {
-		$(document).ajaxError(function() {
-		  alert("ajax error");
+		$(document).ajaxError(function(e, xhr, settings, exception) {
+		  Parcel.Main._stopProgress();
+		  $("#error .parcel-no").html(Parcel.Main._lastParcelId);
+			$("#error").show();
+		  Parcel.Main._ajaxErrorText = xhr.responseText;
+		
+		  $("#welcome_overlay").hide();
+		});
+		$("#error .explain").click(function(e) {
+			e.preventDefault();
+			alert(Parcel.Main._ajaxErrorText);
 		});
 				
 		Parcel.Map.initialize();
@@ -40,7 +49,9 @@ Parcel.Main = {
 	
 	findParcel: function(parcelId) {
 		Parcel.Map.reset();
+		$("#error").hide();
 		
+		this._lastParcelId = parcelId;
 		this._startProgress(parcelId);
 		
 		Parcel.Lookup.find(parcelId, this._onFindSuccess);
@@ -86,6 +97,7 @@ Parcel.Main = {
 		if (this.list.count() == 0) {
 			$("#welcome_overlay").show();
 		}
+		$("#error").hide();
 		Parcel.Map.reset();
 		this.list.reset();
 	}

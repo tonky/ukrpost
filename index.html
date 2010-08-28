@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="/js/codeInputValidator.js"></script>
 	</head>
 	<body id="home">
-		<h1 id="title"><a href="/">Поиск Посылочек</a></h1>
+		<h1 id="title"><a href="/">УкрПосылПоиск</a></h1>
 		
 		<div id="my_parcels" style="display:none">
 			<h2>Мои посылки:</h2>
@@ -32,7 +32,15 @@
 		</div>
 		
 		<div id="progress" style="display:none">
-			<img src="/img/progress.gif" alt="working.."><p>Розыскиваем посылку под номером <span class="parcel-no">AA111111111BB</span>.</p>
+			<img src="/img/progress.gif" alt="working.."><p>Розыскиваем посылку под номером <span class="parcel-no"></span>.</p>
+		</div>
+		
+		<div id="error" style="display:none">
+			<h2>Случилось непредвиденное</h2>
+			<p>При проведении розыскных мероприятий в отношении посылки под номером <span class="parcel-no"></span> наш сервер столкнулся с форс-мажорными обстоятельствами.</p>
+			<p>Виновные будут наказаны в кратчайшие сроки.</p>
+			<p><a class='explain' href="#">Я требую разъяснений!</a></p>
+			<p><a href="/">Принимаю ваши извинения</a>.</p>
 		</div>
 		
 		<div class="waiting-for-input" style="display:none" id="welcome_overlay">
