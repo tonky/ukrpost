@@ -20,10 +20,16 @@ Parcel.Main = {
 		
 		$.address.change(Parcel.Main.onAddressChange);
 		
-		$("#welcome_overlay button").click(function() { 
-			var parcelId = $("#welcome_overlay input[type=text]").val();
+		var button = $("#welcome_overlay button");
+		var input = $("#welcome_overlay input[type=text]");
+		
+		button.click(function() { 
+			var parcelId = input.val();
 			$.address.value("find/" + parcelId);
 		});
+		
+		var validator = new Parcel.CodeInputValidator(input, button);
+		validator.activate();
 	},
 	
 	findParcel: function(parcelId) {

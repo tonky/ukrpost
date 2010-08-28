@@ -11,11 +11,15 @@ Parcel.List = function(root) {
 	});
 	
 	var input = this._root.find("input[type=text]");
+	var button = this._root.find("button");
 	
-	this._root.find("button").click(function() { 
+	button.click(function() { 
 		var parcelId = input.val();
 		$.address.value("find/" + parcelId);
 	});
+	
+	var validator = new Parcel.CodeInputValidator(input, button);
+	validator.activate();
 };
 
 Parcel.List.prototype = {
