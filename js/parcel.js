@@ -2,8 +2,17 @@ if (typeof(Parcel) == "undefined") Parcel = {};
 
 Parcel.Main = {
 	onReady: function() {
-		$(document).ajaxError(function() {
-		  alert("ajax error");
+		$(document).ajaxError(function(e, xhr, settings, exception) {
+		  Parcel.Main._stopProgress();
+		  $("#error .parcel-no").html(Parcel.Main._lastParcelId);
+			$("#error").show();
+		  Parcel.Main._ajaxErrorText = xhr.responseText;
+		
+		  $("#welcome_overlay").hide();
+		});
+		$("#error .explain").click(function(e) {
+			e.preventDefault();
+			alert(Parcel.Main._ajaxErrorText);
 		});
 				
 		Parcel.Map.initialize();
@@ -18,7 +27,7 @@ Parcel.Main = {
 			}
 		}
 		
-		$.address.change(Parcel.Main.onAddressChange);
+		$.address.change(Parcel.Main._onAddressChange);
 		
 		var button = $("#welcome_overlay button");
 		var input = $("#welcome_overlay input[type=text]");
@@ -39,14 +48,20 @@ Parcel.Main = {
 	},
 	
 	findParcel: function(parcelId) {
-		Parcel.Lookup.find(parcelId, this.onFindSuccess);
+		Parcel.Map.reset();
+		$("#error").hide();
+		
+		this._lastParcelId = parcelId;
+		this._startProgress(parcelId);
+		
+		Parcel.Lookup.find(parcelId, this._onFindSuccess);
 	},
 	
-	onAddressChange: function(event) {
+	_onAddressChange: function(event) {
 		value = event.value;
 		
 		if (value == '/') {
-			Parcel.Main.reset();
+			Parcel.Main._reset();
 			return;
 		}
 		
@@ -59,17 +74,30 @@ Parcel.Main = {
 		}
 	},
 	
-	onFindSuccess: function(result) {
+	_onFindSuccess: function(result) {
 		$("#welcome_overlay").hide();
+	
+		Parcel.Main._stopProgress();
 
 		Parcel.Map.showParcel(result);
 		Parcel.Main.list.showParcel(result);
 	},
 	
-	reset: function() {
+	_startProgress: function(parcelId) {
+		$("#progress .parcel-no").html(parcelId);
+		$("#progress").show();
+	},
+	
+	_stopProgress: function()
+	{
+		$("#progress").hide();
+	},
+	
+	_reset: function() {
 		if (this.list.count() == 0) {
 			$("#welcome_overlay").show();
 		}
+		$("#error").hide();
 		Parcel.Map.reset();
 		this.list.reset();
 	}

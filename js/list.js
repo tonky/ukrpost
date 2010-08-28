@@ -16,6 +16,7 @@ Parcel.List = function(root) {
 	button.click(function() { 
 		var parcelId = input.val();
 		$.address.value("find/" + parcelId);
+		input.val("");
 	});
 	
 	var validator = new Parcel.CodeInputValidator(input, button);

@@ -21,7 +21,7 @@ except ImportError:
     import simplejson as json
 
 
-@cache() # cache indefinitely on empty argument
+#@cache() # cache indefinitely on empty argument
 def index(zipcode):
     "Returns filial information in json by its zipcode"
 
@@ -34,7 +34,7 @@ def index(zipcode):
 
     return info
 
-@cache(300) # cache for given number of minutes
+#@cache(300) # cache for given number of minutes
 def track(number):
     "Returns tracking package location and current filial information"
 
