@@ -7,6 +7,20 @@ sys.path.append(os.getcwd())
 from post import parse_tracking_search, parse_filial_info, parse_filial_searchresult
 
 class TestHtmlParsing(unittest.TestCase):
+    def test_delivery_working_on(self):
+        f = open(os.path.join(os.getcwd(), 'test/html/track_working_on.html'), 'r')
+        html = f.read()
+        f.close()
+
+        info = parse_tracking_search(html)
+
+        self.assertEqual(info['zipcode'], 49938)
+        self.assertEqual(info['updated'], "26.08.2010")
+
+        self.assertEqual(info['status_full'], "Відправлення за номером CJ203841359US знаходиться \
+в процесі оброблення. Востаннє воно зареєстроване 26.08.2010 в об’єкті \
+поштового зв’язку Дніпропетровськ ЗВОП Обмін область роб з індексом 49938.")
+
     def test_delivery(self):
         f = open(os.path.join(os.getcwd(), 'test/html/barcode.html'), 'r')
         html = f.read()

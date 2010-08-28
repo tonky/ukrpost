@@ -129,6 +129,8 @@ def parse_tracking_search(html):
     where the package currently is
     """
 
+    date = ""
+
     # strip excess whitespace and tags, also stupid windows newlines
     html = re.sub('\r', '', html)
     html = re.sub('\n', '', html)
@@ -142,8 +144,17 @@ def parse_tracking_search(html):
 
     code = int(re_code.group(1))
 
-    re_date = re.search('передано (\d\d\.\d\d\.\d{4})', html)
-    date = re_date.group(1)
+    # moved to filial
+    transfer_date = re.search('передано (\d\d\.\d\d\.\d{4})', html)
+
+    # registered at filial, and being processed
+    register_date = re.search('зареєстроване (\d\d\.\d\d\.\d{4})', html)
+
+    if transfer_date:
+        date = transfer_date.group(1)
+
+    if register_date:
+        date = register_date.group(1)
 
     re_info = re.search('(Відправлення .*\.)\s', html, re.S)
     info = re_info.group(1)
