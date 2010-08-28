@@ -39,6 +39,7 @@ Parcel.Main = {
 	},
 	
 	findParcel: function(parcelId) {
+		Parcel.Map.reset();
 		Parcel.Lookup.find(parcelId, this.onFindSuccess);
 	},
 	
