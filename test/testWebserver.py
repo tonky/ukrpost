@@ -132,6 +132,17 @@ class TestAsServer(unittest.TestCase):
         self.assertEqual(filial['place'], u"Андронівка (Пеньки)")
         self.assertEqual(filial['coordinates'], {u"lat": 49.9397222, u"lng": 27.0905556})
 
+    def test_search_missing(self):
+        url = 'http://localhost:8000/index/49938'
+        f = urllib.urlopen(url)
+        info = f.info()
+        html = f.read().strip()
+        f.close()
+
+        self.assertNotEqual("application/json", info.gettype())
+
+        self.assertEqual("Not found", html)
+
     def test_help(self):
         url = 'http://localhost:8000/help.html'
         f = urllib.urlopen(url)

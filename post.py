@@ -63,6 +63,10 @@ AA333333333BB передано 20.09.2010 в об'єкт поштового зв
         return False
 
     code, place = parse_filial_searchresult(filial_search_html(delivery['zipcode']))
+
+    if not code:
+        return False
+
     filial = parse_filial_info(filial_info(code), place)
 
     delivery.update(filial)

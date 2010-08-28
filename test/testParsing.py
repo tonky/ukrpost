@@ -49,6 +49,14 @@ RB193328726HK передано 04.08.2010 в об'єкт поштового зв
 Українського державного підприємства поштового зв\'язку "Укрпошта"',
         parsed['address_full'])
 
+    def test_empty_filial(self):
+        with open(os.path.join(os.getcwd(), 'test/html/filial_empty.html'), 'r') as f:
+            html = f.read()
+
+        code, place = parse_filial_searchresult(html)
+        self.assertEqual(False, place)
+        self.assertEqual(False, code)
+
     def test_filial_code_place(self):
         with open(os.path.join(os.getcwd(), 'test/html/index_search.html'), 'r') as f:
             html = f.read()
