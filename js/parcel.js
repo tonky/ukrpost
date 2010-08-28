@@ -40,6 +40,9 @@ Parcel.Main = {
 	
 	findParcel: function(parcelId) {
 		Parcel.Map.reset();
+		
+		this._startProgress(parcelId);
+		
 		Parcel.Lookup.find(parcelId, this._onFindSuccess);
 	},
 	
@@ -62,9 +65,21 @@ Parcel.Main = {
 	
 	_onFindSuccess: function(result) {
 		$("#welcome_overlay").hide();
+	
+		Parcel.Main._stopProgress();
 
 		Parcel.Map.showParcel(result);
 		Parcel.Main.list.showParcel(result);
+	},
+	
+	_startProgress: function(parcelId) {
+		$("#progress .parcel-no").html(parcelId);
+		$("#progress").show();
+	},
+	
+	_stopProgress: function()
+	{
+		$("#progress").hide();
 	},
 	
 	_reset: function() {

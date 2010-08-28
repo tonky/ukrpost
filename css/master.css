@@ -43,6 +43,30 @@ h1#title {
 	margin-left: 100px;
 }
 
+#progress {
+	position: absolute;
+	z-index: 2;
+	
+	right: 70px;
+	top: 45px;
+	
+	border-radius: 4px;
+	opacity: 0.8;
+	background: black;
+	
+	width: 250px;
+}
+
+#progress img {
+	float: left;
+	margin: 24px 0 0 1em;
+}
+
+#progress p {
+	margin: 0;
+	padding: 1em 1.5em 1em 72px;
+}
+
 #my_parcels {
 	position: absolute;
 	z-index: 2;
