@@ -18,7 +18,7 @@ Parcel.Main = {
 			}
 		}
 		
-		$.address.change(Parcel.Main.onAddressChange);
+		$.address.change(Parcel.Main._onAddressChange);
 		
 		var button = $("#welcome_overlay button");
 		var input = $("#welcome_overlay input[type=text]");
@@ -40,14 +40,14 @@ Parcel.Main = {
 	
 	findParcel: function(parcelId) {
 		Parcel.Map.reset();
-		Parcel.Lookup.find(parcelId, this.onFindSuccess);
+		Parcel.Lookup.find(parcelId, this._onFindSuccess);
 	},
 	
-	onAddressChange: function(event) {
+	_onAddressChange: function(event) {
 		value = event.value;
 		
 		if (value == '/') {
-			Parcel.Main.reset();
+			Parcel.Main._reset();
 			return;
 		}
 		
@@ -60,14 +60,14 @@ Parcel.Main = {
 		}
 	},
 	
-	onFindSuccess: function(result) {
+	_onFindSuccess: function(result) {
 		$("#welcome_overlay").hide();
 
 		Parcel.Map.showParcel(result);
 		Parcel.Main.list.showParcel(result);
 	},
 	
-	reset: function() {
+	_reset: function() {
 		if (this.list.count() == 0) {
 			$("#welcome_overlay").show();
 		}
