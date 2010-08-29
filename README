@@ -15,11 +15,14 @@ Dummy data:
   - AA333333333BB
 
 TODO:
-  - don't handle "no data" case as an error, i.e. the UI should behave as normally as possible. The parcel id should be stored for future use, as usual.
   - browser compatibility
     - fix firefox
     - consider basic support for IE8 with "degraded experience" message
     - block ie6/7 
+
+  - don't handle "no data" case as an error, i.e. the UI should behave as normally as possible. The parcel id should be stored for future use, as usual.
+  - fix footer so that it doesn't overlap the map if the browser window is too short
+  - some wording for "my parcels" list
   - add some SEO crap
 
   - find webserver to host this
