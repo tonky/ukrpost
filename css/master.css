@@ -7,7 +7,7 @@ body {
 	padding: 0;
 	margin: 0;
 	
-	background: black;
+	background: #1c2324;
 	font-family: Helvetica, Arial, "sans-serif";
 	font-size: 12px;
 	color: white;
@@ -23,11 +23,14 @@ a, a:active, a:visited {
 	
 	top: 0px;
 	
-	height: 550px;
+	height: 90%;
+	min-height: 550px;
 	width: 100%;
 	
-	background: blue;
+	background: black;
 	color: black;
+	
+	border-bottom: solid 2px #d94141;
 }
 
 h1#title {
@@ -166,4 +169,42 @@ h1#title a {
 }
 
 #welcome_overlay button {
+}
+
+#footer {
+	position: absolute;
+	bottom: 0;
+	height: 10%;
+	width: 100%;
+}
+
+#footer ul {
+	float: right;
+	width: 340px;
+	padding: 20px 0 0 0;
+	margin: 0;
+	list-style-type: none;
+}
+
+#footer ul li {
+	display: inline;
+	white-space: nowrap;
+}
+
+#footer ul li:after {
+	padding-left: 10px;
+	padding-right: 8px;
+	content: "|";
+}
+
+#footer ul li:last-child:after {
+	content: "";
+	padding: 0;
+}
+
+#about_tip {
+	padding: 2em;
+	background: black;
+	opacity: 0.8;
+	border-radius: 4px;
 }

@@ -45,6 +45,15 @@ Parcel.Main = {
 			input.val($(this).html());
 			validator.validate();
 		});
+		
+		$("#about").tooltip({
+			events: {
+				def: "mouseenter click, mouseleave click"
+			},
+			tip: "#about_tip"
+		});
+		
+		$("#about").click(function(e) { e.preventDefault(); });
 	},
 	
 	findParcel: function(parcelId) {
