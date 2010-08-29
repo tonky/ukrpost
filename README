@@ -15,6 +15,16 @@ Dummy data:
   - AA333333333BB
 
 TODO:
+  - size map according to screen
+  - footer with contact info
+  - "no data on parcel yet" special case
+  - feedback form
+  - more info in map tool windows: post office address, phone numbers, depends on what we have available
+  - browser compatibility
+    - fix firefox
+    - consider basic support for IE8 with "degraded experience" message
+    - block ie6/7 
+
   - find webserver to host this
   - purchase domain
   - test with more keys
