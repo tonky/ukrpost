@@ -54,6 +54,11 @@ Parcel.Main = {
 		});
 		
 		$("#about").click(function(e) { e.preventDefault(); });
+		$("#feedback").click(function(e) {
+			e.preventDefault();
+			
+			UserVoice.Popin.show(uservoiceOptions);
+		});
 	},
 	
 	findParcel: function(parcelId) {
