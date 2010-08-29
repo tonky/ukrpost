@@ -4,12 +4,18 @@ Parcel.Main = {
 	onReady: function() {
 		$(document).ajaxError(function(e, xhr, settings, exception) {
 		  Parcel.Main._stopProgress();
-		  $("#error .parcel-no").html(Parcel.Main._lastParcelId);
-			$("#error").show();
-		  Parcel.Main._ajaxErrorText = xhr.responseText;
-		
 		  $("#welcome_overlay").hide();
+
+			if (xhr.status == 404) {
+				$("#not_found").show();
+			}
+			else {
+		    $("#error .parcel-no").html(Parcel.Main._lastParcelId);			
+			  $("#error").show();
+		    Parcel.Main._ajaxErrorText = xhr.responseText;
+			}
 		});
+		
 		$("#error .explain").click(function(e) {
 			e.preventDefault();
 			alert(Parcel.Main._ajaxErrorText);
@@ -64,6 +70,7 @@ Parcel.Main = {
 	findParcel: function(parcelId) {
 		Parcel.Map.reset();
 		$("#error").hide();
+		$("#not_found").hide();
 		
 		this._lastParcelId = parcelId;
 		this._startProgress(parcelId);

@@ -15,7 +15,7 @@ Dummy data:
   - AA333333333BB
 
 TODO:
-  - "no data on parcel yet" special case
+  - don't handle "no data" case as an error, i.e. the UI should behave as normally as possible. The parcel id should be stored for future use, as usual.
   - browser compatibility
     - fix firefox
     - consider basic support for IE8 with "degraded experience" message

@@ -85,6 +85,21 @@ h1#title {
 	padding: 0 2em 1em 1em;
 }
 
+#not_found {
+	position: absolute;
+	z-index: 2;
+	width: 360px;
+	right: 50%;
+	margin-right: -220px;
+	top: 25%;
+	
+	background:#822e3e;
+	opacity: 0.9;
+	border-radius: 4px;
+	
+	padding: 0 2em 1em 1em;
+}
+
 #my_parcels {
 	position: absolute;
 	z-index: 2;
