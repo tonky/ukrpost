@@ -32,9 +32,35 @@ Parcel.Map = {
 		  title: parcel.name
 		});
 		
+		var content = parcel.status_full;
+		
+		if (parcel.place || parcel.street || parcel.phone) {
+			content += "<p>";
+		
+			if (parcel.place || parcel.street) {
+				content += "<strong>Адрес</strong>: ";
+				
+				if (parcel.place) {
+					content += parcel.place + (parcel.street ? ", " : "");
+				}
+				
+				if (parcel.street) {
+					content += parcel.street;
+				}
+				
+				content += "<br />";
+			}
+			
+			if (parcel.phone) {
+				content += "<strong>Телефон</strong>: " + parcel.phone;
+			}
+			
+  		content += "</p>";
+	  }
+		
 		this._infoWindow = new google.maps.InfoWindow({
-		  content: parcel.status_full,
-		  maxWidth: 200
+		  content: content,
+		  maxWidth: 300
 		});
 	
 		this._infoWindow.open(this._map, this._marker);

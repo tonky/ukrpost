@@ -16,7 +16,6 @@ Dummy data:
 
 TODO:
   - "no data on parcel yet" special case
-  - more info in map tool windows: post office address, phone numbers, depends on what we have available
   - browser compatibility
     - fix firefox
     - consider basic support for IE8 with "degraded experience" message
