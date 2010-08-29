@@ -24,6 +24,7 @@ TODO:
   - fix footer so that it doesn't overlap the map if the browser window is too short
   - some wording for "my parcels" list
   - add some SEO crap
+  - "zoom in" option in map toolwindow
 
   - find webserver to host this
   - purchase domain
