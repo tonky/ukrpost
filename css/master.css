@@ -38,6 +38,8 @@ h1#title {
 	z-index: 2;
 	
 	border-radius: 4px;
+	-moz-border-radius: 4px;
+	
 	opacity: 0.9;
 	background: #1c2324;
 	padding: 12px 24px;
@@ -54,6 +56,8 @@ h1#title {
 	top: 45px;
 	
 	border-radius: 4px;
+	-moz-border-radius: 4px;
+	
 	opacity: 0.9;
 	background: #1c2324;
 	
@@ -82,6 +86,8 @@ h1#title {
 	background: #6E0C18;
 	opacity: 0.9;
 	border-radius: 4px;
+	-moz-border-radius: 4px;
+
 	padding: 0 2em 1em 1em;
 }
 
@@ -96,6 +102,7 @@ h1#title {
 	background:#822e3e;
 	opacity: 0.9;
 	border-radius: 4px;
+	-moz-border-radius: 4px;
 	
 	padding: 0 2em 1em 1em;
 }
@@ -105,6 +112,7 @@ h1#title {
 	z-index: 2;
 	
 	border-radius: 4px;
+	-moz-border-radius: 4px;
 	opacity: 0.9;
 	background: #1c2324;
 	
@@ -164,6 +172,7 @@ h1#title a {
 	opacity: 0.8;
 	
 	border-radius: 4px;
+	-moz-border-radius: 4px;
 }
 
 #welcome_overlay h2 {
@@ -222,4 +231,5 @@ h1#title a {
 	background: #1c2324;
 	opacity: 0.9;
 	border-radius: 4px;
+	-moz-border-radius: 4px;
 }
