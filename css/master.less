@@ -1,0 +1,198 @@
+@background: #1c2324;
+
+.overlay (@bg: @background) {
+	position: absolute;
+	z-index: 2;
+	opacity: 0.9;
+
+	background: @bg;
+
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	
+	background: @background;
+	font-family: Helvetica, Arial, "sans-serif";
+	font-size: 12px;
+	color: white;
+	line-height: 18px;
+}
+
+a, a:active, a:visited {
+	color: white;
+}
+
+#map_canvas {
+	position: absolute;
+	
+	top: 0px;
+	
+	height: 90%;
+	min-height: 550px;
+	width: 100%;
+	
+	background: black;
+	color: black;
+	
+	border-bottom: solid 2px #d94141;
+}
+
+h1#title {
+	.overlay;
+	
+	padding: 12px 24px;
+	
+	margin-top: 20px;
+	margin-left: 100px;
+	
+	a {
+		text-decoration: none;
+	}
+}
+
+#progress {
+	.overlay;
+
+	right: 70px;
+	top: 45px;
+	width: 250px;
+
+	img {
+		float: left;
+		margin: 24px 0 0 1em;
+	}
+
+	p {
+		margin: 0;
+		padding: 1em 1.5em 1em 72px;
+	}
+}
+
+#error {
+	.overlay(#6E0C18);
+
+	width: 360px;
+	right: 50%;
+	top: 25%;
+
+	margin-right: -220px;
+	padding: 0 2em 1em 1em;
+}
+
+#not_found {
+	.overlay(#822e3e);
+
+	width: 360px;
+	right: 50%;
+	margin-right: -220px;
+	top: 25%;
+	
+	padding: 0 2em 1em 1em;
+}
+
+#my_parcels {
+	.overlay;
+	
+	top: 72px;
+	left: 100px;
+	width: 230px;
+	
+	padding: 1em 1em 1em 2em;
+	
+	h2 {
+		display: none;
+		margin: 0;
+		font-size: 14px;
+	}
+	
+	ul {
+		margin: 0;
+		margin-left: -5px;
+		padding: 0;
+		list-style-type: none;
+	}
+	
+	a {
+		padding: 2px 4px;
+	}
+	
+	a.current {
+		background: #d94141;
+		text-decoration: none;
+	}
+	
+	div.input {
+		margin-top: 2em;
+		
+		input {
+			margin-left: -2px;
+			margin-right: 4px;
+			width: 145px;
+		}
+	}
+}
+
+#welcome_overlay {
+	.overlay;
+
+	top: 150px;
+	right: 50%;
+	margin-right: -200px;
+	
+	width: 400px;
+	padding: 1.5em 1.5em 2em 1.5em;
+	
+	h2 {
+		margin: 0;
+	}
+	
+	input[type=text] {
+		width: 200px;
+	}
+}
+
+
+#footer {
+	position: absolute;
+	bottom: 0;
+	height: 10%;
+	width: 100%;
+	
+	ul {
+		float: right;
+		width: 500px;
+		padding: 20px 0 0 0;
+		margin: 0;
+		list-style-type: none;
+		
+		li {
+			display: inline;
+			white-space: nowrap;
+		}
+		
+		li:after {
+			padding-left: 10px;
+			padding-right: 8px;
+			content: "|";
+		}
+		
+		li:last-child:after {
+			content: "";
+			padding: 0;
+		}
+	}
+}
+
+#about_tip {
+	.overlay;
+	padding: 2em;
+}
