@@ -26,10 +26,13 @@ TODO:
   - analytics
   - "zoom in" option in map toolwindow
 
+  Tonky:
   - find webserver to host this
   - purchase domain
   - test with more keys
   - deploy
+  - publishing
+  - all 200 responses with statuses in json
 
 Ideas:
   - feedback form & server side api
